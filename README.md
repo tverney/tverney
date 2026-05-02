@@ -1,4 +1,4 @@
-<h1 align="center">Hi there, I'm Thiago Verney 👋</h1>
+<h1 align="center">Hi there, I'm Thiago 👋</h1>
 <h3 align="center">Front-End Engineer II @ Amazon · Based in Austin, TX 🇺🇸</h3>
 
 ---
