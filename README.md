@@ -70,13 +70,15 @@ Front-end software developer passionate about tech innovation, agentic AI, and c
 ### 📊 GitHub Stats
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=tverney&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=tverney&theme=tokyonight" alt="GitHub Streak" />
+  <img src="./generated/github-stats.svg" alt="GitHub Stats" />
+  <img src="./generated/streak-stats.svg" alt="GitHub Streak" />
 </p>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tverney&layout=compact&theme=tokyonight" alt="Top Languages" />
+  <img src="./generated/top-langs.svg" alt="Top Languages" />
 </p>
+
+> Stats are refreshed daily via [GitHub Actions](.github/workflows/update-stats.yml).
 
 ---
 

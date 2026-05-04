@@ -1,0 +1,59 @@
+name: Update GitHub Stats Cards
+
+on:
+  schedule:
+    # Runs daily at 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create output directory
+        run: mkdir -p generated
+
+      - name: Generate GitHub Stats card
+        run: |
+          curl -s -o generated/github-stats.svg \
+            "https://github-readme-stats.vercel.app/api?username=tverney&show_icons=true&theme=tokyonight&hide_border=true"
+          # Verify we got a valid SVG (not an error page)
+          if ! head -1 generated/github-stats.svg | grep -q '<svg'; then
+            echo "::warning::Stats card may not be valid SVG, retrying..."
+            sleep 10
+            curl -s -o generated/github-stats.svg \
+              "https://github-readme-stats.vercel.app/api?username=tverney&show_icons=true&theme=tokyonight&hide_border=true"
+          fi
+
+      - name: Generate Top Languages card
+        run: |
+          curl -s -o generated/top-langs.svg \
+            "https://github-readme-stats.vercel.app/api/top-langs/?username=tverney&layout=compact&theme=tokyonight&hide_border=true"
+          if ! head -1 generated/top-langs.svg | grep -q '<svg'; then
+            echo "::warning::Top langs card may not be valid SVG, retrying..."
+            sleep 10
+            curl -s -o generated/top-langs.svg \
+              "https://github-readme-stats.vercel.app/api/top-langs/?username=tverney&layout=compact&theme=tokyonight&hide_border=true"
+          fi
+
+      - name: Generate Streak Stats card
+        uses: be-next/github-streak-stats-action@v1
+        with:
+          username: tverney
+          token: ${{ secrets.GITHUB_TOKEN }}
+          output-path: generated/streak-stats.svg
+          theme: tokyonight
+          hide-border: true
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add generated/*.svg
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore: update GitHub stats cards [skip ci]"
+          git push
