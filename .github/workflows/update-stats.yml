@@ -63,4 +63,5 @@ jobs:
           git add generated/*.svg
           git diff --staged --quiet && echo "No changes to commit" && exit 0
           git commit -m "chore: update GitHub stats cards [skip ci]"
+          git pull --rebase
           git push
