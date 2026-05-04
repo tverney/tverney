@@ -17,30 +17,37 @@ jobs:
       - name: Create output directory
         run: mkdir -p generated
 
-      - name: Generate GitHub Stats card
-        run: |
-          curl -s -o generated/github-stats.svg \
-            "https://github-readme-stats.vercel.app/api?username=tverney&show_icons=true&theme=tokyonight&hide_border=true"
-          # Verify we got a valid SVG (not an error page)
-          if ! head -1 generated/github-stats.svg | grep -q '<svg'; then
-            echo "::warning::Stats card may not be valid SVG, retrying..."
-            sleep 10
-            curl -s -o generated/github-stats.svg \
-              "https://github-readme-stats.vercel.app/api?username=tverney&show_icons=true&theme=tokyonight&hide_border=true"
-          fi
+      - name: Generate GitHub Stats SVG
+        uses: lowlighter/metrics@latest
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          filename: generated/github-stats.svg
+          user: tverney
+          template: classic
+          base: header, activity, community, repositories
+          config_display: large
+          config_timezone: America/Chicago
 
-      - name: Generate Top Languages card
-        run: |
-          curl -s -o generated/top-langs.svg \
-            "https://github-readme-stats.vercel.app/api/top-langs/?username=tverney&layout=compact&theme=tokyonight&hide_border=true"
-          if ! head -1 generated/top-langs.svg | grep -q '<svg'; then
-            echo "::warning::Top langs card may not be valid SVG, retrying..."
-            sleep 10
-            curl -s -o generated/top-langs.svg \
-              "https://github-readme-stats.vercel.app/api/top-langs/?username=tverney&layout=compact&theme=tokyonight&hide_border=true"
-          fi
+      - name: Generate Top Languages SVG
+        uses: lowlighter/metrics@latest
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          filename: generated/top-langs.svg
+          user: tverney
+          template: classic
+          base: ""
+          plugin_languages: yes
+          plugin_languages_analysis_timeout: 15
+          plugin_languages_categories: markup, programming
+          plugin_languages_colors: github
+          plugin_languages_limit: 8
+          plugin_languages_recent_categories: markup, programming
+          plugin_languages_recent_days: 14
+          plugin_languages_recent_load: 300
+          plugin_languages_sections: most-used
+          plugin_languages_threshold: 0%
 
-      - name: Generate Streak Stats card
+      - name: Generate Streak Stats SVG
         uses: be-next/github-streak-stats-action@v1
         with:
           username: tverney
